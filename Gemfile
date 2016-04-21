@@ -48,5 +48,7 @@ group :development do
   gem 'twitter-bootstrap-rails', '~> 3.2', '>= 3.2.2'
   #simple form that will DSL and give flexibility when creating form for more info refer to the documentation
   gem 'simple_form'
+  #devise gem for login , signup and authentication handles all the stuff related to authentication
+  gem 'devise'
 end
 
