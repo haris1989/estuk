@@ -46,7 +46,7 @@ group :development do
 
   #twitter bootstrap gem
   gem 'twitter-bootstrap-rails', '~> 3.2', '>= 3.2.2'
-
-  gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+  #simple form that will DSL and give flexibility when creating form for more info refer to the documentation
+  gem 'simple_form'
 end
 
