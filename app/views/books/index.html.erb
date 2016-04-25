@@ -1,8 +1,13 @@
+<style>
+td, th {
+    padding: 21px;
+}
+</style>
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Books</h1>
-
-<table>
+<h2 class="text-center">Listing Books</h2>
+<div class="row text-center">
+<table style="margin: 0px auto;">
   <thead>
     <tr>
       <th>Name</th>
@@ -33,3 +38,4 @@
 <br>
 
 <%= link_to 'New Book', new_book_path %>
+</div>
