@@ -1,10 +1,12 @@
 class BooksController < ApplicationController
   before_action :set_book, only: [:show, :edit, :update, :destroy]
-
+  
+  respond_to :html
   # GET /books
   # GET /books.json
   def index
     @books = Book.all
+    respond_with(@books)
   end
 
   # GET /books/1
