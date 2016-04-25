@@ -12,6 +12,7 @@
       
       <%= link_to("Eustek",root_path,class:"navbar-brand") if current_user == nil %>
       <%= link_to("Hello "+current_user.email.to_s,root_path,class:"navbar-brand") if current_user  %>
+
       
     </div>
 
@@ -20,7 +21,7 @@
      
       <ul class="nav navbar-nav navbar-right">
       <% if current_user %>
-
+      <li><%= link_to "Books" ,books_path %></li>
       <li><%= link_to "Settings" ,edit_user_registration_path %></li>
       <li><%= link_to "Log out" ,destroy_user_session_path, method: :delete %></li>
 
