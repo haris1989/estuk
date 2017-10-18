@@ -1,0 +1,74 @@
+Imports System.Data.SqlClient
+Imports DPFP
+Public Class Form1
+    Private WithEvents verifyControl As DPFP.Gui.Verification.VerificationControl
+    Private matcher As DPFP.Verification.Verification
+    Private matchResult As DPFP.Verification.Verification.Result
+    Private allReaderSerial As String = "00000000-0000-0000-0000-000000000000"
+    Public template As DPFP.Template
+    Private userTemplateColumn As String = "Template"
+    Private userIDColumn As String = "ID"
+    Dim bytes As Byte()
+    Private Sub CreateDPControl(ByRef control As DPFP.Gui.Verification.VerificationControl)
+        Try
+            control = New DPFP.Gui.Verification.VerificationControl()
+            control.AutoSizeMode = Windows.Forms.AutoSizeMode.GrowAndShrink
+            control.Name = "verifyControl"
+            control.Location = New System.Drawing.Point(0, 0)
+            control.ReaderSerialNumber = "00000000-0000-0000-0000-000000000000"
+            control.Visible = True
+            control.Enabled = True
+            control.BringToFront()
+            Me.Controls.Add(control)
+        Catch ex As Exception
+            MessageBox.Show("exception")
+        End Try
+    End Sub
+    Private Function ConnectString() As String
+        Dim connectionString As String
+        connectionString = "Server=localhost;database=bs;User ID=sa;Password=123"
+        Return connectionString
+    End Function
+    Private Sub VerifyBiometric_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        matcher = New Verification.Verification()
+        matchResult = New Verification.Verification.Result
+        CreateDPControl(verifyControl)
+    End Sub
+    Private Sub verifyControl_OnComplete(ByVal Control As Object, ByVal FeatureSet As DPFP.FeatureSet, ByRef EventHandlerStatus As DPFP.Gui.EventHandlerStatus) Handles verifyControl.OnComplete
+        Dim dataSet As DataSet = New DataSet()
+        Dim adapter As SqlDataAdapter = New SqlDataAdapter()
+        Dim sqlCommand As SqlCommand = New SqlCommand()
+        Dim ctr = 0
+        Try
+            Dim max As Integer = 0
+            Dim cn As New SqlConnection(ConnectString())
+            cn.Open()
+            sqlCommand.CommandText = "Select templateBytes7 from userthumbs where id='1029'"
+            sqlCommand.CommandType = CommandType.Text
+            sqlCommand.Connection = cn
+            Dim lrd As SqlDataReader = sqlCommand.ExecuteReader()
+            Dim usr
+            While lrd.Read()
+                usr = lrd("templateBytes7")
+            End While
+            bytes = Nothing
+            bytes = usr
+            template = New DPFP.Template()
+            template.DeSerialize(usr)
+            'Perform match
+            matcher.Verify(FeatureSet, template, matchResult)
+            If matchResult.Verified Then
+                EventHandlerStatus = Gui.EventHandlerStatus.Success
+                MsgBox("Verified!")
+                Me.Hide()
+                MessageBox.Show("Done")
+            Else
+                EventHandlerStatus = Gui.EventHandlerStatus.Failure
+                MsgBox("Please Try Again!")
+            End If
+        Finally
+        End Try
+    End Sub
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    End Sub
+End Class
